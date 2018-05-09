@@ -1,4 +1,11 @@
+/**
+ * Utilitary functions
+ */
 
+/**
+ * Serialize an object:
+ * - Create an new object for function so it could be called back
+ */
 function SerializeForProcess(obj, parent) {
     var objSendified = obj;
 
@@ -31,6 +38,10 @@ function SerializeForProcess(obj, parent) {
 
 var SerializedFunctions = [];
 
+/**
+ * Serialized Functions
+ * Have an id, so we can call it back when it is called in the thread
+ */
 class SerializedFunction {
     constructor(f) {
         SerializedFunctions.push(this);
@@ -39,6 +50,9 @@ class SerializedFunction {
     }
 };
 
+/**
+ * Copy arguments in a clean classic array
+ */
 function copyArguments(args) {
     var copy = [];
     for (var i = 0; i < args.length; i++) {
@@ -46,6 +60,11 @@ function copyArguments(args) {
     }
     return copy;
 }
+
+/**
+ * Execute a serialized function with an id
+ * Those are for progress functions, don't use Promise it will not be checked
+ */
 function executeSerializedFunction(id, args) {
     SerializedFunctions.forEach(function(sf) {
         if (sf.id == id) {
