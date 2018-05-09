@@ -1,0 +1,24 @@
+{
+  "name": "threadify",
+  "version": "1.0.0",
+  "description": "Add the possibility of executing functions in an other thread. Works with Electron.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Naxann/electron-threadify.git"
+  },
+  "keywords": [
+    "thread",
+    "electron",
+    "function"
+  ],
+  "author": "Naxann",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Naxann/electron-threadify/issues"
+  },
+  "homepage": "https://github.com/Naxann/electron-threadify#readme"
+}
