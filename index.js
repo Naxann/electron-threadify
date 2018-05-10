@@ -412,6 +412,9 @@ function findObject(c, obj, path, alreadyParsed) {
     alreadyParsed.push(obj);
     for (var key = 0; key < keys.length; key++) {
         var i = keys[key];
+        if (i == "NativeModule" && isElectron) {
+            break;
+        }
         if (obj[i] === c) {
             path.push(i);
             return path;
@@ -463,6 +466,7 @@ function Threadify(options) {
     if (!options.module) {
         var cacheFounded = null;
         var pathExport = [];
+        var parsedModule = [require.main, require.cache];
         for (var i in require.cache) {
             var cache = require.cache[i];
 
@@ -474,9 +478,14 @@ function Threadify(options) {
                 if (isElectron && cache.filename.indexOf("/node_modules/electron/") >= 0) {
                     continue;
                 }
-                var pathObject = findObject(this, cache.exports);
+                var pathObject = [];
+                if (cache.exports !== this) {
+                    pathObject = findObject(this, cache.exports, [], parsedModule);
+                }
+
                 if (pathObject !== null) {
                     cacheFounded = {module: cache, pathToClass: pathObject};
+                    break;
                 }
             }
 
@@ -516,6 +525,6 @@ var Config = new (function() {
 Function.prototype.Threadify = Threadify;
 
 exports.Threadify = function(o, options) {
-    return Threadify.apply(o, options);
+    return Threadify.apply(o, [options]);
 };
 exports.ThreadifyConfig = Config;
