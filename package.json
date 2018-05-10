@@ -1,5 +1,5 @@
 {
-  "name": "threadify",
+  "name": "thread-promisify",
   "version": "1.0.0",
   "description": "Add the possibility of executing functions in an other thread. Works with Electron.",
   "main": "index.js",

@@ -1,0 +1,14 @@
+{
+  "name": "thread-promisify-example",
+  "version": "0.0.1",
+  "main": "index.js",
+  "devDependencies": {
+    "electron": "^1.7.9"
+  },
+  "scripts": {
+    "start": "electron main.js"
+  },
+  "dependencies": {
+    "thread-promisify": "^1.0.0"
+  }
+}
