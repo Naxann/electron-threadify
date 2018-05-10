@@ -9,9 +9,11 @@
 function SerializeForProcess(obj, parent) {
     var objSendified = obj;
 
-    if (typeof(objSendified) == "object" && !Array.isArray(objSendified)) {
+    if (typeof(objSendified) == "object" && !Array.isArray(objSendified) && objSendified !== null && objSendified !== undefined) {
         objSendified = Object.assign({}, objSendified);
-        objSendified._className = obj.constructor.name;
+        if (obj.constructor) {
+            objSendified._classname = obj.constructor.name;
+        }
         for (var i in objSendified) {
             var sendified = SerializeForProcess(objSendified[i], obj);
             if (sendified != undefined) {
