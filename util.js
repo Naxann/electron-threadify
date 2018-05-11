@@ -6,12 +6,30 @@
  * Serialize an object:
  * - Create an new object for function so it could be called back
  */
+
+var TypedArrayNames = {
+    "Int8Array": Int8Array,
+    "Uint8Array": Uint8Array,
+    "Uint8ClampedArray": Uint8ClampedArray,
+    "Int16Array": Int16Array,
+    "Uint16Array": Uint16Array,
+    "Int32Array": Int32Array,
+    "Uint32Array": Uint32Array,
+    "Float32Array": Float32Array,
+    "Float64Array": Float64Array
+};
 function SerializeForProcess(obj, parent) {
     var objSendified = obj;
 
-    if (typeof(objSendified) == "object" && !Array.isArray(objSendified) && objSendified !== null && objSendified !== undefined) {
+    if (typeof(objSendified) == "object" && objSendified !== null && TypedArrayNames[obj.constructor.name]) {
+        // Nothing to be done
+        objSendified = {};
+        objSendified.values = Array.from(obj);
+        objSendified._classname = obj.constructor.name;
+    }
+    else if (typeof(objSendified) == "object" && !Array.isArray(objSendified) && objSendified !== null && objSendified !== undefined) {
         objSendified = Object.assign({}, objSendified);
-        if (obj.constructor) {
+        if (obj.constructor && obj.constructor.name !== "Object") {
             objSendified._classname = obj.constructor.name;
         }
         for (var i in objSendified) {
@@ -36,6 +54,28 @@ function SerializeForProcess(obj, parent) {
         }
     }
     return objSendified;
+}
+
+function UnserializeFromProcess(obj, parent) {
+    var objUnserialized = obj;
+    var construct;
+    if (typeof(objUnserialized) == "object" && objUnserialized !== null && (construct = TypedArrayNames[obj._classname])) {
+        objUnserialized = new construct(objUnserialized.values);
+    }
+    else if (typeof(objUnserialized) == "object" && !Array.isArray(objUnserialized) && objUnserialized !== null && objUnserialized !== undefined) {
+        for (var i in objUnserialized) {
+            var unserialized = UnserializeFromProcess(objUnserialized[i], obj);
+            if (unserialized != undefined) {
+                objUnserialized[i] = unserialized;
+            }
+        };
+    } else if (Array.isArray(objUnserialized)) {
+        objUnserialized = objUnserialized.slice();
+        objUnserialized.forEach(function(item, i) {
+            objUnserialized[i] = UnserializeFromProcess(item);
+        });
+    }
+    return objUnserialized;
 }
 
 var SerializedFunctions = [];
@@ -77,6 +117,7 @@ function executeSerializedFunction(id, args) {
 
 module.exports = {
     SerializeForProcess: SerializeForProcess,
+    UnserializeFromProcess: UnserializeFromProcess,
     CopyArguments: copyArguments,
     ExecuteSerializedFunction: executeSerializedFunction
 };

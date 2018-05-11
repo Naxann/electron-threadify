@@ -11,7 +11,7 @@
  *
  */
 let fork, path;
-const {SerializeForProcess, ExecuteSerializedFunction, CopyArguments} = require('./util.js');
+const {SerializeForProcess, UnserializeFromProcess, ExecuteSerializedFunction, CopyArguments} = require('./util.js');
 
 let electron, ipc = null;
 
@@ -153,6 +153,7 @@ var ThreadMessage = new function() {
  * Parse the message from the thread or just passthrough to the Electron Renderer Process concerned
  */
 function ParseMessageFromThread(o) {
+    var o = UnserializeFromProcess(o);
     if (typeof(o) == "object" && o.name && o.args) {
 
         // Process response from the thread
@@ -237,8 +238,10 @@ function SendThreadRequest(tq) {
             if (!thread) {
                 // We kill an inactive one for adding this specific thread, or we add one if we are on below
                 if (threads.length < Config.maxThreads || inactiveThreadObject) {
-                    inactiveThreadObject.inactive = false;
-                    inactiveThreadObject.thread.kill();
+                    if (inactiveThreadObject) {
+                        inactiveThreadObject.inactive = false;
+                        inactiveThreadObject.thread.kill();
+                    }
                     threads.splice(indexInactiveThreadObject, 1);
                     threadObject = {anonymous: false, id: threadId, thread: null, inactive: false};
                     threads.push(threadObject);
@@ -350,6 +353,7 @@ function ThreadifyAll(sup, options) {
     var base = function() {
         this._proxy = true;
         this._proxyOptions = Object.assign({}, myOptions, {constructArgs: SerializeForProcess(CopyArguments(arguments))});
+
     };
 
     if (typeof(sup) == "function") {
@@ -461,7 +465,6 @@ function Threadify(options) {
         exportsPath: null,
         methods: []
     }, options);
-
     // We automatically search the class or the object in the module loaded
     if (!options.module) {
         var cacheFounded = null;
