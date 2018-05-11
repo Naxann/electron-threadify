@@ -226,8 +226,12 @@ function SendThreadRequest(tq) {
             for (var i = 0; i < threads.length; i++) {
                 threadObject = threads[i];
                 if (threadObject.id == threadId) {
-                    threadObject.inactive = false;
-                    thread = threadObject.thread;
+					if (threadObject.inactive) {
+						threadObject.inactive = false;
+						thread = threadObject.thread;
+					} else {
+						return false; // Directly returning false, because thread is active and we can't surcharge him (Windows crash)
+					}
                 }
                 else if (threadObject.inactive) {
                     // We check for inactive thread, in case the max number of thread is used
