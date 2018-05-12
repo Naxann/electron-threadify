@@ -128,38 +128,10 @@ as a parameter, without complications, as simple as that.
         _progress(2);
     });
 
-The method will be fired in the main process, and not in the thread process
+The method will be fired in the main process, and not in the thread process.
 
 ## Event Handlers
     
 Currently, EventEmitter is not supported by this. 
 But in the future, maybe ! So when you will fire an event, the event will be 
 send back to the main process too.
-
-### mp3
-
-    npm install mp3
-    
-### vorbis
-    
-    npm install vorbis.js
-
-### opus
-    
-    npm install opus.js
-
-### FLAC
-    
-    npm install flac.js
-    
-### AAC
-
-    npm install aac
-    
-### ALAC (Apple Lossless)
-
-    npm install alac
-
-## Other formats
-
-If you know other Aurora.js plugins, tell me in the issues, or just do a pull ;)
