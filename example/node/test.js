@@ -1,6 +1,6 @@
-const { Threadify, ThreadifyConfig } = require('./index');
+const { Threadify, ThreadifyConfig } = require('../../index');
 let { Test, TestObject } = require('./test.class');
-
+ThreadifyConfig.logLevel = 1;
 ThreadifyConfig.maxThreads = 1;
 
 function Progress(status) {
