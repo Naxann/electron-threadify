@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Naxann/electron-threadify.git"
+    "url": "git+https://github.com/Naxann/thread-promisify.git"
   },
   "keywords": [
     "thread",
@@ -18,7 +18,7 @@
   "author": "Naxann",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/Naxann/electron-threadify/issues"
+    "url": "https://github.com/Naxann/thread-promisify/issues"
   },
-  "homepage": "https://github.com/Naxann/electron-threadify#readme"
+  "homepage": "https://github.com/Naxann/thread-promisify#readme"
 }
