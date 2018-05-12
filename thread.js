@@ -26,7 +26,7 @@ function Log() {
 function ConvertArgs(args, baseResponse) {
     var baseResponse = Object.assign({}, baseResponse);
     args.forEach(function(arg, i) {
-        if (typeof(arg) == "object" && arg._className == "SerializedFunction") {
+        if (typeof(arg) == "object" && arg._classname == "SerializedFunction") {
             var idRemoteFunction = arg.id;
             args[i] = function() {
                 process.send(Object.assign(baseResponse, {name: "thread-execute-remote-function", args: [{id: idRemoteFunction, args: SerializeForProcess(CopyArguments(arguments))}]}));
