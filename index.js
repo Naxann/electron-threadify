@@ -18,6 +18,7 @@ let electron, ipc = null;
 var threads = null;
 var isElectron = false;
 var ipcSenders = {};
+var osNumberOfCPUs = 1;
 
 function Log(level) {
     var args = CopyArguments(arguments);
@@ -69,9 +70,12 @@ try {
 
 if (!isElectron || electron.ipcMain) {
     let child_process = require('child_process');
+    let os = require('os');
     fork = child_process.fork;
     path = require('path');
     threads = [];
+
+    osNumberOfCPUs = os.cpus().length;
 }
 
 /**
@@ -515,7 +519,7 @@ var Config = new (function() {
      * The number of threads maximum
      * Default: 4
      */
-    this.maxThreads = 4;
+    this.maxThreads = Math.max(osNumberOfCPUs-1, 1);
     /**
      * Log level information (from 0 to no information, to 3 to thread information)
      * Default: 0
@@ -528,7 +532,6 @@ var Config = new (function() {
      */
     this.killThreadsWhenInactive = true; // To avoid memory leaks. Set on true if memory is controlled on each thread to have better performance
 })();
-
 Function.prototype.Threadify = Threadify;
 
 exports.Threadify = function(o, options) {
